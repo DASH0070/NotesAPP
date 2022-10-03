@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-import { ref, reactive } from 'vue';
-
 const props = defineProps<{ database: { userName: string, password: string }[], router: { activeLink: string } }>();
 const { database, router } = props;
 
@@ -49,6 +47,3 @@ const handleSignIn = () => {
         Already Have an account? Sign In
     </button>
 </template>
-<style scoped>
-
-</style>

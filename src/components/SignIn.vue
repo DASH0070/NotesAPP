@@ -5,10 +5,11 @@ const { database, router } = props;
 const userData: { userName: string, password: string } = ({ userName: '', password: '' });
 
 const handleSignIn = () => {    // FORM SUBMIT HANDLER
-    if (database.filter((elem) => elem.userName === userData.userName).length === 0) {    // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
-        alert('Enter Valid Authentications');
-        return;
-    }
+    // if (database.filter((elem) => elem.userName === userData.userName).length === 0) {    // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
+    //     alert('Enter Valid Authentications');
+    //     return;
+    // }
+    router.activeLink = 'notes'
 }
 
 const handleSignUp = () => {    // SIGN UP BUTTON HANDLER
@@ -37,6 +38,3 @@ const handleSignUp = () => {    // SIGN UP BUTTON HANDLER
         Don't Have an account? Sign Up
     </button>
 </template>
-<style scoped>
-
-</style>
