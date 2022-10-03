@@ -24,8 +24,7 @@ const database = reactive<{ userName: string, password: string }[]>([]);
 
 <template>
     <SignIn :database="database" :router="router" v-if="router.activeLink === routerValues.signIn" />
-    <!-- <SignUp v-if="router.activeLink === routerValues.signUp" /> -->
-    <SignUp :database="database" :router="router" />
+    <SignUp :database="database" :router="router" v-if="router.activeLink === routerValues.signUp" />
 </template>
 
 <style scoped>

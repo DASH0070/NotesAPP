@@ -1,15 +1,31 @@
 <script setup lang="ts">
 
+import { ref, reactive } from 'vue';
+
 const props = defineProps<{ database: { userName: string, password: string }[], router: { activeLink: string } }>();
 const { database, router } = props;
 
-const userData: { userName: string, password: string } = { userName: '', password: '' };    // STORES NEW USER DATA
-const handleSignUp = () => {    // HANDLE FORM SUBMIT
-    if (database.filter((elem) => elem.userName === userData.userName).length != 0) return; // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
-    database.push(userData);     // PUSHING NEW USER DATA IN DATABASE
-    // database.sort(database.)
+// const userData: { userName: string, password: string } = { userName: '', password: '' };    // STORES NEW USER DATA
+const userData: { userName: string, password: string } = ({ userName: '', password: '' });
 
+const handleSignUp = () => {    // HANDLE FORM SUBMIT
+    if (!userData.userName || !userData.password) {
+        alert('Enter All Fields');
+        return;
+    }
+    if (database.filter((elem) => elem.userName === userData.userName).length > 0) {    // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
+        alert('Username Already Exist');
+        return;
+    }
+    database.push({ userName: userData.userName, password: userData.password });     // PUSHING NEW USER DATA IN DATABASE
+    database.sort((a, b) => a.userName > b.userName ? 1 : -1);
+    router.activeLink = 'signIn';
 }
+
+const handleSignIn = () => {
+    router.activeLink = 'signIn';
+}
+
 </script>
 <template>
     <h1 class="text-slate-700 text-4xl">SIGN UP</h1>
@@ -27,11 +43,11 @@ const handleSignUp = () => {    // HANDLE FORM SUBMIT
          hover:text-slate-600">
             Sign Up
         </button>
-        <!-- SIGN IN BUTTON  -->
-        <button @click="" class="text-left hover:underline duration-200 hover:text-yellow-700">
-            Already Have an account? Sign In
-        </button>
     </form>
+    <!-- SIGN IN BUTTON  -->
+    <button @click="handleSignIn" class="text-left hover:underline duration-200 hover:text-yellow-700 my-10">
+        Already Have an account? Sign In
+    </button>
 </template>
 <style scoped>
 
