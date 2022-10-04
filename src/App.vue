@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 // Components Import
 import SignIn from './components/SignIn.vue';
 import SignUp from './components/SignUp.vue';
@@ -14,29 +14,38 @@ enum routerValues {
 };
 
 // ROUTER
-const router = reactive<{ activeLink: routerValues }>({ activeLink: routerValues.signIn });
+const router = ref<{ activeLink: routerValues }>({ activeLink: routerValues.signIn });
 
 // USERS DATA
-const database = reactive<{ userName: string, password: string }[]>([]);
-database.push({userName: 'a', password: 'a'})
+const database = ref<{ userName: string, password: string }[]>([]);
 
 // NOTES DATA
-const notesData = reactive<{[userName: string]: string[]}[]>([]);
-notesData.push({'a': ['ADADA', 'asdasd', 'wrwerwrw']});
+let notesData = ref<{ [userName: string]: string[] }[]>([]);
 
+const handleSignUpResponse = (msg: string) => {
+    notesData.value.push({ [msg[0]]: [] });
+    notesData.value.sort((a, b) => a.userName > b.userName ? 1 : -1);
+}
+let user = ref('');
+let userIndex = ref();
+const handleSignInResponse = (msg: string) => {
+    for (let i = 0; i < notesData.value.length; i++) {
+        if (notesData.value[i].hasOwnProperty(msg[0])) {
+            user.value = msg[0];
+            userIndex.value = i;
+        }
+    }
+    router.value.activeLink = routerValues.notes;
+}
 
 </script>
 
 <template>
-    <SignIn :database="database" :router="router" v-if="router.activeLink === routerValues.signIn" />
-    <SignUp :database="database" :router="router" v-if="router.activeLink === routerValues.signUp" />
-    <Notes :notesData="notesData[0].a" />
+
+    <SignIn key="2" @submit="(msg) => handleSignInResponse(msg as unknown as string)" :database="database"
+        :router="router" v-if="router.activeLink === routerValues.signIn" />
+    <SignUp key="1" @submit="(msg) => handleSignUpResponse(msg as unknown as string)" :database="database"
+        :router="router" v-if="router.activeLink === routerValues.signUp" />
+    <Notes :router="router" :notesData="notesData[userIndex][user]" v-if="router.activeLink === routerValues.notes" />
 </template>
 
-<style scoped>
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-</style>

@@ -1,31 +1,41 @@
 <script setup lang="ts">
 
+import { ref } from 'vue';
+// RECIEVE DATABASE AND ROUTER AS POPS
 const props = defineProps<{ database: { userName: string, password: string }[], router: { activeLink: string } }>();
 const { database, router } = props;
 
-// const userData: { userName: string, password: string } = { userName: '', password: '' };    // STORES NEW USER DATA
-const userData: { userName: string, password: string } = ({ userName: '', password: '' });
+const userData = ref<{ userName: string, password: string }>({ userName: '', password: '' });  // STORE USERNAME, PASSWORD ENTER IN FIELD
+const emit = defineEmits(['submit']);
 
-const handleSignUp = () => {    // HANDLE FORM SUBMIT
-    if (!userData.userName || !userData.password) {
+// HANDLE FORM SUBMIT
+const handleSignUp = () => {
+    if (!userData.value.userName || !userData.value.password) {
         alert('Enter All Fields');
         return;
     }
-    if (database.filter((elem) => elem.userName === userData.userName).length > 0) {    // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
+    // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
+    if (database.filter((elem) => elem.userName === userData.value.userName).length > 0) {
         alert('Username Already Exist');
+        userData.value.userName = '';
+        userData.value.password = '';
         return;
     }
-    database.push({ userName: userData.userName, password: userData.password });     // PUSHING NEW USER DATA IN DATABASE
-    database.sort((a, b) => a.userName > b.userName ? 1 : -1);
-    router.activeLink = 'signIn';
+    database.push({ userName: userData.value.userName, password: userData.value.password });     // PUSHING NEW USER DATA IN DATABASE
+    database.sort((a, b) => a.userName > b.userName ? 1 : -1);  // SORTING DATABASE
+    emit('submit', [userData.value.userName]);    // EMIT USERNAME OF NEW USER
+    router.activeLink = 'signIn';   // SETTING ROUTER TO SIGNIN
 }
 
+// HANDLE SIGN IN BUTTON LINK
 const handleSignIn = () => {
-    router.activeLink = 'signIn';
+    router.activeLink = 'signIn';   // SETTING ROUTER TO SIGN IN
 }
+
 
 </script>
 <template>
+
     <h1 class="text-slate-700 text-4xl">SIGN UP</h1>
     <!-- SIGN UP FORM  -->
     <form @submit.prevent="handleSignUp" class="flex flex-col items-left justify-center gap-10 w-96 mx-auto">
@@ -46,4 +56,5 @@ const handleSignIn = () => {
     <button @click="handleSignIn" class="text-left hover:underline duration-200 hover:text-yellow-700 my-10">
         Already Have an account? Sign In
     </button>
+
 </template>
