@@ -3,24 +3,23 @@
 import { ref } from 'vue';
 
 // RECIEVE DATABASE AND ROUTER AS POPS
-const props = defineProps<{ database: { userName: string, password: string }[], router: { activeLink: string } }>();
-const { database, router } = props;
+const props = defineProps<{ router: { activeLink: string } }>();
+const {router } = props;
 
 const userData = ref<{ userName: string, password: string }>({ userName: '', password: '' });
 const emit = defineEmits(['submit']);
 
 // FORM SUBMIT HANDLER
 const handleSignIn = () => {
-    // CHECKING IF USERNAME EXIST IN DATABASE  
-    for (let i = 0; i < database.length; i++) {
-        if (database[i].userName === userData.value.userName) {
-            if (database[i].password === userData.value.password) {
-                emit('submit', [userData.value.userName]);    // EMIT USERNAME OF USER SIGN IN
-                return;
-            }
-            break;
+    for (let i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) === userData.value.userName) {
+            if (JSON.parse(localStorage.getItem(localStorage.key(i) as string) as string)[0] !== userData.value.password) break;
+            router.activeLink = 'notes';
+            emit('submit', localStorage.key(i) as string)
+            return;
         }
     }
+    
     alert('Enter Valid Authentications');
     userData.value.userName = '';
     userData.value.password = '';

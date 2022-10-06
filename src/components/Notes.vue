@@ -1,28 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const props = defineProps<{ notesData: string[], router: { activeLink: string } }>();   // Recieve All Notes data of User as Props
-let { notesData, router } = props;
-
+const props = defineProps<{ user: string, router: { activeLink: string } }>();   // Recieve All Notes data of User as Props
+let { user, router } = props;
+let notesData = ref<[string, string[]]>(JSON.parse(localStorage.getItem(user) as string));
 // Add Notes button
 const addNotes = () => {
-    notesData.push('');
+    notesData.value[1].push('');
 }
 
 // remove Notes Button
 const removeNotes = (index: number) => {
-    for (let i = index; i < notesData.length - 1; i++) {
-        notesData[i] = notesData[i + 1];
+    for (let i = index; i < notesData.value[1].length - 1; i++) {
+        notesData.value[i] = notesData.value[i + 1];
     }
-    notesData.pop();
+    notesData.value[1].pop();
 }
+watch(notesData.value, (newKey) => localStorage.setItem(user, JSON.stringify(newKey)));
 
 </script>
 <template>
 
     <div class="flex flex-wrap gap-10">
-        <div v-for="(elem, index) in notesData">
-            <textarea v-model="notesData[index]" :key="index" class="w-60 h-40 border-2 ">{{elem}}</textarea>
+        <div v-for="(elem, index) in notesData[1]">
+            <textarea v-model="notesData[1][index]" :key="index" class="w-60 h-40 border-2 ">{{elem}}</textarea>
             <button @click="removeNotes(index)">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">

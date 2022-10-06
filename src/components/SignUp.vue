@@ -1,12 +1,10 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-// RECIEVE DATABASE AND ROUTER AS POPS
-const props = defineProps<{ database: { userName: string, password: string }[], router: { activeLink: string } }>();
-const { database, router } = props;
 
+const props = defineProps<{ router: { activeLink: string } }>();    // RECIEVE ROUTER AS POPS
+const { router } = props;
 const userData = ref<{ userName: string, password: string }>({ userName: '', password: '' });  // STORE USERNAME, PASSWORD ENTER IN FIELD
-const emit = defineEmits(['submit']);
 
 // HANDLE FORM SUBMIT
 const handleSignUp = () => {
@@ -15,15 +13,13 @@ const handleSignUp = () => {
         return;
     }
     // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
-    if (database.filter((elem) => elem.userName === userData.value.userName).length > 0) {
+    if (localStorage.getItem(userData.value.userName)) {
         alert('Username Already Exist');
         userData.value.userName = '';
         userData.value.password = '';
         return;
     }
-    database.push({ userName: userData.value.userName, password: userData.value.password });     // PUSHING NEW USER DATA IN DATABASE
-    database.sort((a, b) => a.userName > b.userName ? 1 : -1);  // SORTING DATABASE
-    emit('submit', [userData.value.userName]);    // EMIT USERNAME OF NEW USER
+    localStorage.setItem(userData.value.userName, JSON.stringify([userData.value.password, []]));
     router.activeLink = 'signIn';   // SETTING ROUTER TO SIGNIN
 }
 

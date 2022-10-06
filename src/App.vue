@@ -16,36 +16,18 @@ enum routerValues {
 // ROUTER
 const router = ref<{ activeLink: routerValues }>({ activeLink: routerValues.signIn });
 
-// USERS DATA
-const database = ref<{ userName: string, password: string }[]>([]);
-
-// NOTES DATA
-let notesData = ref<{ [userName: string]: string[] }[]>([]);
-
-const handleSignUpResponse = (msg: string) => {
-    notesData.value.push({ [msg[0]]: [] });
-    notesData.value.sort((a, b) => a.userName > b.userName ? 1 : -1);
-}
 let user = ref('');
-let userIndex = ref();
 const handleSignInResponse = (msg: string) => {
-    for (let i = 0; i < notesData.value.length; i++) {
-        if (notesData.value[i].hasOwnProperty(msg[0])) {
-            user.value = msg[0];
-            userIndex.value = i;
-        }
-    }
-    router.value.activeLink = routerValues.notes;
+    user.value = msg;
 }
 
 </script>
 
 <template>
 
-    <SignIn key="2" @submit="(msg) => handleSignInResponse(msg as unknown as string)" :database="database"
+    <SignIn key="2" @submit="(msg) => handleSignInResponse(msg as unknown as string)"
         :router="router" v-if="router.activeLink === routerValues.signIn" />
-    <SignUp key="1" @submit="(msg) => handleSignUpResponse(msg as unknown as string)" :database="database"
-        :router="router" v-if="router.activeLink === routerValues.signUp" />
-    <Notes :router="router" :notesData="notesData[userIndex][user]" v-if="router.activeLink === routerValues.notes" />
+    <SignUp key="1" :router="router" v-if="router.activeLink === routerValues.signUp" />
+    <Notes :user="user" :router="router" v-if="router.activeLink === routerValues.notes" />
 </template>
 
