@@ -8,8 +8,28 @@ const userData = ref<{ userName: string, password: string }>({ userName: '', pas
 
 // HANDLE FORM SUBMIT
 const handleSignUp = () => {
-    if (!userData.value.userName || !userData.value.password) {
-        alert('Enter All Fields');
+    if (userData.value.userName.length < 4) {
+        alert('username should be atleast 4 characters long');
+        return;
+    }
+    if (userData.value.password.length < 8) {
+        alert('password should be atleast 8 characters long');
+        return;
+    }
+    if (!/[0-9]/.test(userData.value.password)) {
+        alert('password should contain atleast 1 numeric character');
+        return;
+    }
+    if (!/[a-z]/.test(userData.value.password)) {
+        alert('password should contain atleast 1 small case alphabet');
+        return;
+    }
+    if (!/[A-Z]/.test(userData.value.password)) {
+        alert('password should contain atleast 1 capital alphabet');
+        return;
+    }
+    if (!/[^0-9a-zA-Z]/.test(userData.value.password)) {
+        alert('password should contain atleast 1 special character');
         return;
     }
     // CHECKING IF USERNAME ALREADY EXIST IN DATABASE
@@ -27,7 +47,6 @@ const handleSignUp = () => {
 const handleSignIn = () => {
     router.activeLink = 'signIn';   // SETTING ROUTER TO SIGN IN
 }
-
 
 </script>
 <template>
