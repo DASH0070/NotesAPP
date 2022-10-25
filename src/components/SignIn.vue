@@ -38,10 +38,10 @@ const handleSignUp = () => {
     <!-- SIGN IN FORM  -->
     <form @submit.prevent="handleSignIn" class="flex flex-col items-left justify-center gap-10 w-96 mx-auto">
         <!-- USERNAME FIELD  -->
-        <input v-model="userData.userName" type="text" placeholder="Enter Username"
+        <input v-model="userData.userName" type="text" placeholder="Username"
             class="border-2 focus:border-slate-900 rounded-full px-2 mt-10 outline-none" />
         <!-- PASSWORD FIELD  -->
-        <input v-model="userData.password" type="password" placeholder="Enter Password"
+        <input v-model="userData.password" type="password" placeholder="Password"
             class="border-2 focus:border-slate-900 rounded-full px-2 outline-none" />
         <!-- FORM SUBMIT / SIGN IN BUTTON  -->
         <button type="submit" class="bg-slate-600 text-slate-50 w-20 border-2 ease-out
