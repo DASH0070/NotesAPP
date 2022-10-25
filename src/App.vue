@@ -17,17 +17,18 @@ enum routerValues {
 const router = ref<{ activeLink: routerValues }>({ activeLink: routerValues.signIn });
 
 let user = ref('');
-const handleSignInResponse = (msg: string) => {
+const handleSignInResponse = (msg: string, notes: string) => {
     user.value = msg;
+    router.value.activeLink = routerValues.notes;
 }
 
 </script>
 
 <template>
 
-    <SignIn key="2" @submit="(msg) => handleSignInResponse(msg as unknown as string)"
-        :router="router" v-if="router.activeLink === routerValues.signIn" />
-    <SignUp key="1" :router="router" v-if="router.activeLink === routerValues.signUp" />
-    <Notes :user="user" :router="router" v-if="router.activeLink === routerValues.notes" />
+    <SignIn key="2" @signup="router.activeLink = routerValues.signUp" @submit="(msg, notes) => handleSignInResponse(msg as unknown as string, notes)"
+        v-if="router.activeLink === routerValues.signIn" />
+    <SignUp key="1" @signin="router.activeLink = routerValues.signIn" v-if="router.activeLink === routerValues.signUp" />
+    <Notes @signin="router.activeLink = routerValues.signIn" :user="user" v-if="router.activeLink === routerValues.notes" />
 </template>
 

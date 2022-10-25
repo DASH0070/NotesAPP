@@ -2,11 +2,10 @@
 
 import { ref } from 'vue';
 
-const props = defineProps<{ router: { activeLink: string } }>();    // RECIEVE ROUTER AS POPS
-const { router } = props;
 const userData = ref<{ userName: string, password: string, email: string, mobile?: number }>({ userName: '', password: '', email: '' });  // STORE USERNAME, PASSWORD ENTER IN FIELD
 
-// HANDLE FORM SUBMIT
+const emit = defineEmits(['submit', 'signin'])
+// HANDLE FORM SUBMIT AND FORM VALIDATION
 const handleSignUp = () => {
     console.log(userData.value)
     if (!userData.value.userName) {
@@ -48,13 +47,13 @@ const handleSignUp = () => {
         userData.value.password = '';
         return;
     }
-    localStorage.setItem(userData.value.userName, JSON.stringify([userData.value.password, []]));
-    router.activeLink = 'signIn';   // SETTING ROUTER TO SIGNIN
+    localStorage.setItem(userData.value.userName, JSON.stringify([userData.value.password, [], userData.value.mobile, userData.value.email]));
+    emit('signin');
 }
 
 // HANDLE SIGN IN BUTTON LINK
 const handleSignIn = () => {
-    router.activeLink = 'signIn';   // SETTING ROUTER TO SIGN IN
+    emit('signin');   // SETTING ROUTER TO SIGN IN
 }
 
 </script>
